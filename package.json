@@ -1,0 +1,26 @@
+{
+  "name": "mcp-server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@thirdweb-dev/sdk": "^4.0.99",
+    "axios": "^1.9.0",
+    "buffer": "^6.0.3",
+    "dotenv": "^16.5.0",
+    "ethers": "^5.8.0",
+    "express": "^5.1.0",
+    "form-data": "^4.0.2",
+    "fs": "^0.0.1-security",
+    "nft.storage": "^7.2.0",
+    "node-fetch": "^3.3.2",
+    "openai": "^4.96.0",
+    "path": "^0.12.7"
+  }
+}
