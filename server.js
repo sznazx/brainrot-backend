@@ -2,42 +2,38 @@
 
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors');
 const { ethers } = require('ethers');
 const { OpenAI } = require('openai');
 const axios = require('axios');
 const fs = require('fs');
 const FormData = require('form-data');
-const path = require('path');
+
 const app = express();
-
-app.use(express.json()); // for parsing application/json
-
 const port = process.env.PORT || 3000;
+
+app.use(cors());
+app.use(express.json());
 
 // Setup ethers provider and wallet
 const provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL);
 const wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
 
-// OpenAI client
+// Setup OpenAI client
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-// NFT Contract ABI
+// NFT Contract ABI (example mint function)
 const nftAbi = [
   "function mintTo(address recipient, string memory metadataURI) public returns (uint256)"
 ];
 
-// Contract address
+// NFT contract address
 const contractAddress = process.env.CONTRACT_ADDRESS;
 
 // Connect to NFT contract
 const nftContract = new ethers.Contract(contractAddress, nftAbi, wallet);
-
-// Serve the index.html
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '/index.html'));
-});
 
 // Upload file to Pinata
 async function uploadToPinata(filepath, filename) {
@@ -81,9 +77,9 @@ app.post('/mint-brainrot-animal', async (req, res) => {
     // 1. Create exaggerated mutant description using OpenAI
     let prompt;
     if (animal2) {
-      prompt = `Create a wild, hyper-realistic, ultra-detailed mutant fusion of a ${animal1} and a ${animal2}. Photorealistic, cinematic lighting, extreme details, realistic anatomy, surreal elements.`;
+      prompt = `Create a wild, hyper-realistic, ultra-detailed mutant fusion of a ${animal1} and a ${animal2}. Photorealistic, cinematic lighting, realistic anatomy, surreal elements.`;
     } else {
-      prompt = `Create a wild, hyper-realistic, ultra-detailed surreal version of a ${animal1}. Photorealistic, cinematic lighting, extreme details, realistic anatomy, surreal elements.`;
+      prompt = `Create a wild, hyper-realistic, ultra-detailed surreal version of a ${animal1}. Photorealistic, cinematic lighting, realistic anatomy, surreal elements.`;
     }
 
     console.log("🧠 Creating realistic mutant description for:", animal1, animal2 ? `and ${animal2}` : "");
@@ -97,7 +93,7 @@ app.post('/mint-brainrot-animal', async (req, res) => {
 
     console.log("🎨 Mutated Realistic Description:", mutantDescription);
 
-    // 2. Prepare final prompt for DALL·E 3
+    // 2. Prepare final prompt for DALL-E 3
     const finalPrompt = mutantDescription + " Ultra-detailed hyper-realistic creature portrait in 8K resolution, cinematic lighting, no text, no words, no letters, pure creature realism.";
 
     // 3. Generate AI image from OpenAI DALL·E 3
